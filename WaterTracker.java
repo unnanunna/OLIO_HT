@@ -11,7 +11,7 @@ public class WaterTracker {
 		return water;
 	}
 	
-	public int waterAmount(double weight, int exercise) {
+	public int waterAmount(float weight, int exercise) {
 		//paino kg, liikunta min, tulos dl
 		waterAmount = (((weight/2) * 0.295735296) + (exercise * (0.4 * 0.295735296))) * 100;
 		waterNeeded = (int) Math.round(waterAmount);
