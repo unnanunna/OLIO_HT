@@ -2,7 +2,8 @@ package HT;
 
 public class WaterTracker {
 	
-	private int water;
+	//20 ml
+	private int water = 20;
 	public double waterAmount;
 	public int waterNeeded;
 	public int totalWater = 0;
@@ -18,9 +19,15 @@ public class WaterTracker {
 		return waterNeeded;
 	}
 	
-	public int waterAdd(int water) {
-		totalWater = totalWater + water; 
+	public int waterAdd() {
+		if (totalWater < waterNeeded) {
+			totalWater = totalWater + water;
+			System.out.println("You have had " + totalWater + " ml water already today.");
+		}
+		else if (totalWater >= waterNeeded) {
+			totalWater = totalWater + water;
+			System.out.println("Congratulations, you already achieved your goal! You have had " + totalWater + " ml water today.");
+		}
 		return totalWater;
 	}
-
 }
