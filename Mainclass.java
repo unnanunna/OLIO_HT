@@ -15,10 +15,12 @@ public class Mainclass {
 		float weight = 0;
 		String gender = "";
 		float exercise1 = 0;
+		int choise;
 		//private float exercise;
 		
-		WaterTracker Tracker = new WaterTracker();
 		Entry entry = new Entry();
+		WaterTracker tracker = new WaterTracker();
+		VitaminRecomment vitamins = new VitaminRecomment();
 		
 		entry.getName(name);
 		entry.getAge(age);
@@ -38,7 +40,27 @@ public class Mainclass {
 		exercise = (int) Math.round(exercise1*60);
 
 		//System.out.println("Result: " + Tracker.waterAmount(inputWeight, exercise));
-		System.out.println("Result: " + Tracker.waterAmount(weight, exercise));
+		System.out.println("You need " + tracker.waterAmount(weight, exercise) + " ml water every day.");
+		
+		while (true) {
+			System.out.println("What do you want to do?");
+			System.out.println("1) Add glass of water");
+			System.out.println("2) Add vitamins of the day");
+			System.out.println("0) The next day");
+			System.out.println("Your choise: ");
+			Scanner scanner = new Scanner(System.in);
+			choise = scanner.nextInt();
+			if (choise == 0) {
+				break;
+			}
+			else if (choise == 1) {
+				tracker.waterAdd();
+			}
+			else if (choise == 2) {
+				vitamins.vitaminAdd();
+			}
+		}
+		
 		System.out.println("End.");
 	}
 }
