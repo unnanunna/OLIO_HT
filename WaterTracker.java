@@ -30,4 +30,8 @@ public class WaterTracker {
 		}
 		return totalWater;
 	}
+	
+	public int getTotalWater() {
+		return totalWater;
+	}
 }
