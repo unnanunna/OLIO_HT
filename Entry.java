@@ -1,4 +1,6 @@
 package HT;
+
+import java.time.LocalDate;
 import java.util.Scanner;
 public class Entry {
 	
@@ -6,12 +8,25 @@ public class Entry {
 	
 	//User luokassa olevat muutujat
 	private String name;
+	private LocalDate date;
 	private int age;
 	private float weight;
 	private String gender;
 	private float exercise;
 	
 
+	public LocalDate getDate() {
+		/*var today = new Date();
+		var day = today.getDate();
+		var month = today.getMonth() + 1;
+		var year = today.getYear();
+		date = day + '.' + month + '.' + year;
+		System.out.print(date);*/
+		date = java.time.LocalDate.now();
+		
+		return date;
+	}
+	
 	public String getName(String name) {
 		System.out.print("Your name: ");
 		Scanner scanner1 = new Scanner(System.in);
@@ -47,4 +62,3 @@ public class Entry {
 		return exercise;
 	}
 }
-
