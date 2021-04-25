@@ -7,5 +7,14 @@ public class User {
 	private float weight;
 	private String gender;
 	private float exercise;
+	
+	private String user(String name1) {
+		name = name1;
+		return name;
+	}
+	
+	private int setAge(int number) {
+		return age;
+	}
 
 }
