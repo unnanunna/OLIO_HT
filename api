@@ -1,0 +1,79 @@
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.view.View;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+public class MainActivity extends AppCompatActivity {
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //this.readJson();
+        this.getJson();
+
+    }
+
+    public void readJson(View v){
+        String json = getJson();
+        System.out.println("JSON: " + json);
+        if (json != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(json);
+                for(int i=0; i<jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    //System.out.println(jsonObject.getString("description"));
+                    System.out.println(jsonObject.getString("fi"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String getJson(){
+        String response = null;
+        try {
+            /*URL url = new URL("https://fineli.fi/fineli/api/v1/components/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");*/
+            HttpClient client = HttpClients.custom().build();
+            HttpUriRequest request = RequestBuilder.get().setUri(SAMPLE_URL).setHeader(HttpHeaders.CONTENT_TYPE, "application/json").build();
+            client.execute(request);
+
+            InputStream input = new BufferedInputStream(connection.getInputStream());
+            BufferedReader br = new BufferedReader(new InputStreamReader(input));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            response = sb.toString();
+            input.close();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
