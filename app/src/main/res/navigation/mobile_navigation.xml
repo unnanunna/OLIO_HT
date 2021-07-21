@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/home"
-        android:name="com.example.viwa.ui.home.HomeFragment"
+        android:name="com.example.viwa.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/graph"
-        android:name="com.example.viwa.ui.home.HomeFragment"
+        android:name="com.example.viwa.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_graph" />
 
     <fragment
         android:id="@+id/info"
-        android:name="com.example.viwa.ui.home.HomeFragment"
+        android:name="com.example.viwa.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_info" />
 
     <fragment
         android:id="@+id/user"
-        android:name="com.example.viwa.ui.home.HomeFragment"
+        android:name="com.example.viwa.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_user" />
 
