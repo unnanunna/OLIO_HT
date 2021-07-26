@@ -1,0 +1,104 @@
+package com.example.viwa;
+
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+/*
+ * A simple {@link Fragment} subclass.
+ * Use the {@link InfoFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class InfoFragment extends Fragment {
+
+    //TextView textView;
+    ReadJson json = ReadJson.getInstance();
+
+    public InfoFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_info, container, false);
+
+        TextView text = (TextView) root.findViewById(R.id.TextView);
+
+        String result = null;
+        JSONObject jObj = new JSONObject();
+        JSONArray array = null;
+        try {
+            array = jObj.getJSONArray(ReadJson.readJsonFromUrl("https://fineli.fi/fineli/api/v1/components/"));
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+
+        for (int i=0; i < array.length(); i++){
+            JSONObject oneObj = null;
+            try {
+                oneObj = array.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String item = null;
+            try {
+                item = oneObj.getString("code");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            System.out.println(item);
+            text.setText(item);
+            //String item = oneObj.getString("code");
+        }
+
+        /* esimerkki
+        for (int i=0; i < jArray.length(); i++){
+            try {
+                JSONObject oneObject = jArray.getJSONObject(i);
+                // Pulling items from the array
+                String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
+                String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
+            } catch (JSONException e) {
+                // Oops
+            }
+        }
+         */
+        /*JSONObject root = new JSONObject(json);
+        JSONObject data = root.getJSONObject("description");
+
+        for (int i = 0; i < data.length(); i++) {
+            //JSONObject dataentry = (JSONObject) data.get(1);
+            //JSONObject data1 = dataentry.getJSONObject("description");
+            String jsonTemp = data.getString("en");
+            System.out.println(jsonTemp);
+        }*/
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_info, container, false);
+    }
+    /*
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        check = checkDay(waterTracker.getWater(), vita.getVitamin());
+        clicked = checkDay.getClicked();
+        ImageButton button = root.findViewById(R.id.vitamins);
+     */
+}
