@@ -1,28 +1,34 @@
 package com.example.viwa;
 
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
 /*
  * A simple {@link Fragment} subclass.
  * Use the {@link InfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class InfoFragment extends Fragment {
 
-    //TextView textView;
+    TextView textView;
     ReadJson json = ReadJson.getInstance();
 
     public InfoFragment() {
@@ -31,74 +37,74 @@ public class InfoFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_info, container, false);
+        textView = (TextView) root.findViewById(R.id.TextView);
 
-        TextView text = (TextView) root.findViewById(R.id.TextView);
+        new DownloadTask().execute();
 
-        String result = null;
-        JSONObject jObj = new JSONObject();
-        JSONArray array = null;
-        try {
-            array = jObj.getJSONArray(ReadJson.readJsonFromUrl("https://fineli.fi/fineli/api/v1/components/"));
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
-        }
-
-        for (int i=0; i < array.length(); i++){
-            JSONObject oneObj = null;
-            try {
-                oneObj = array.getJSONObject(i);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String item = null;
-            try {
-                item = oneObj.getString("code");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            System.out.println(item);
-            text.setText(item);
-            //String item = oneObj.getString("code");
-        }
-
-        /* esimerkki
-        for (int i=0; i < jArray.length(); i++){
-            try {
-                JSONObject oneObject = jArray.getJSONObject(i);
-                // Pulling items from the array
-                String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
-                String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
-            } catch (JSONException e) {
-                // Oops
-            }
-        }
-         */
-        /*JSONObject root = new JSONObject(json);
-        JSONObject data = root.getJSONObject("description");
-
-        for (int i = 0; i < data.length(); i++) {
-            //JSONObject dataentry = (JSONObject) data.get(1);
-            //JSONObject data1 = dataentry.getJSONObject("description");
-            String jsonTemp = data.getString("en");
-            System.out.println(jsonTemp);
-        }*/
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info, container, false);
+        return root;
     }
-    /*
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+    //AsyncTask needed to read Json file, because using fragment instead of button
+    protected class DownloadTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+        }
 
-        check = checkDay(waterTracker.getWater(), vita.getVitamin());
-        clicked = checkDay.getClicked();
-        ImageButton button = root.findViewById(R.id.vitamins);
-     */
+        @Override
+        protected String doInBackground(String... params) {
+            URL url = null;
+            String response = null;
+
+            try {
+                url = new URL("https://fineli.fi/fineli/api/v1/components/");
+                HttpURLConnection connection = null;
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                InputStream input = new BufferedInputStream(connection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                StringBuilder builder = new StringBuilder();
+                String line = null;
+
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line).append("\n");
+                }
+
+                response = builder.toString();
+                input.close();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+
+
+            try {
+                textView.setText(json.read(result));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
