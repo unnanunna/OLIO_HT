@@ -21,6 +21,7 @@
         app:layout_constraintVertical_bias="0.076" />
 
     <TextView
+        android:id="@+id/vitinfo"
         android:layout_width="300dp"
         android:layout_height="500dp"
         android:text="Vitamin info"
