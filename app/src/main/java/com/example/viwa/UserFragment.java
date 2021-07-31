@@ -38,6 +38,7 @@ public class UserFragment extends Fragment {
 
     }
 
+    //taking user input and saving the entry
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

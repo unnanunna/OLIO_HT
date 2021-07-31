@@ -26,6 +26,7 @@ public class WaterTracker {
     EntryManager manager = new EntryManager();
 
     public int waterAmount() {
+        //calculate the amount of water the user needs
 
         weightString = manager.getWeight();
         exerciseString = manager.getExercise();

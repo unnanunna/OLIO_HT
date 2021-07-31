@@ -40,8 +40,9 @@ public class HomeFragment extends Fragment {
     }
 
     public boolean checkDay(int water, int vitamin){
-        strDay = currentDay.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        //checking the day
 
+        strDay = currentDay.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
         if (checking.getCheck().equals("")) {
             return true;
@@ -75,6 +76,7 @@ public class HomeFragment extends Fragment {
         clicked = checking.getClicked();
         ImageButton button = root.findViewById(R.id.vitamins);
 
+        //making sure the vitamin button stays correct color
         if (check && clicked) {
             button.setBackgroundResource(R.color.dark_turqoise);
         } else if (!check) {
@@ -90,6 +92,7 @@ public class HomeFragment extends Fragment {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //user has taken vitamin
 
                 vita.vitaminAdd();
                 checking.setClicked(true);
@@ -110,6 +113,8 @@ public class HomeFragment extends Fragment {
         Button smallWater = root.findViewById(R.id.smallGlass);
         smallWater.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //add 100ml water to meter
+
                 waterTracker.waterAdd(100);
                 progress = Integer.toString(waterTracker.getWater());
                 TextView textView2 = (TextView) root.findViewById(R.id.progressWater);
@@ -129,6 +134,8 @@ public class HomeFragment extends Fragment {
         Button mediumWater = root.findViewById(R.id.mediumGlass);
         mediumWater.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //add 200ml water to meter
+
                 waterTracker.waterAdd(200);
                 progress = Integer.toString(waterTracker.getWater());
                 TextView textView2 = (TextView) root.findViewById(R.id.progressWater);
@@ -148,6 +155,8 @@ public class HomeFragment extends Fragment {
         Button bigWater = root.findViewById(R.id.largeGlass);
         bigWater.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
+                //add 500ml water to meter
+
                 waterTracker.waterAdd(500);
 
                 progress = Integer.toString(waterTracker.getWater());
@@ -170,7 +179,7 @@ public class HomeFragment extends Fragment {
         maxWater = Integer.toString(waterNeeded);
         progress = Integer.toString(waterTracker.getWater());
 
-
+        //progressbar
         ProgressBar simpleProgressBar=(ProgressBar) root.findViewById(R.id.progress);
         simpleProgressBar.setMax(waterNeeded);
         simpleProgressBar.setProgress(waterTracker.getWater());

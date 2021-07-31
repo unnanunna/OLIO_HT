@@ -30,6 +30,8 @@ public class Log {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveData(LocalDate date, int iwater, int vitamins, Context ctx) throws IOException {
+        //save data to internal file
+
         waterAmount = String.valueOf(iwater);
 
         if (vitamins == 0) {
@@ -64,6 +66,7 @@ public class Log {
     }
 
     public void readData(TextView history, Context ctx) {
+        //show saved data in history page
         FileInputStream fis = null;
 
         try {
