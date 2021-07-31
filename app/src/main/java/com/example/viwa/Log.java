@@ -1,29 +1,35 @@
 package com.example.viwa;
 
+import android.content.Context;
 import android.os.Build;
+import android.telephony.mbms.FileInfo;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Log {
     private String waterAmount = "";
     private String vitaminAmount = "";
-    private String formatedDay = "";
-    private String input = "";
-    private String filename = "com/example/viwa/FileInfo.txt";
+    private static final String FILE_NAME = "Log.txt";
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void saveData(LocalDate date, int iwater, int vitamins) {
+    public void saveData(LocalDate date, int iwater, int vitamins, Context ctx) throws IOException {
         waterAmount = String.valueOf(iwater);
 
         if (vitamins == 0) {
@@ -32,44 +38,62 @@ public class Log {
             vitaminAmount = "taken";
         }
 
-        formatedDay = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        formatedDay = date.toString();
+        String formatedDay = date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
         //https://examples.javacodegeeks.com/core-java/xml/parsers/documentbuilderfactory/create-xml-file-in-java-using-dom-parser-example/
 
+        FileOutputStream fos = null;
+        String line = formatedDay + ';' + waterAmount + ';' + vitaminAmount + '\n';
 
-        try (FileWriter fw = new FileWriter(filename, true);
-             BufferedWriter bw = new BufferedWriter(fw);
-             PrintWriter out = new PrintWriter(bw)) {
-            out.println(formatedDay + ';' + waterAmount + ';' + vitaminAmount + '\n');
-
+        try {
+            fos = ctx.openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(line.getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    public void readData(TextView history) {
+    public void readData(TextView history, Context ctx) {
+        FileInputStream fis = null;
+
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            fis = ctx.openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
 
-            System.out.println();
-            String output = "";
-            int length;
-
-            //String[] parts = new String[3];
-            if ((output = br.readLine()) != null) {
-                String[] parts = output.split(";", 3);
-                length = output.length();
+            while ((text = br.readLine()) != null) {
+                String[] parts = text.split(";", 3);
+                int length = text.length();
                 if (length > 0) {
-                    input = parts[0] + " you had " + parts[1] + " ml water and had " + parts[2] + " your vitamins.";
-                    history.setText(input);
+                    String input = parts[0] + " you had " + parts[1] + " ml water and had " + parts[2] + " your vitamins.";
+                    sb.append(input).append("\n");
                 }
-            } else {
-
             }
-            br.close();
+            history.setText(sb.toString());
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     }

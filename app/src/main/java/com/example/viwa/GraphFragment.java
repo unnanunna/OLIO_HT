@@ -30,7 +30,7 @@ public class GraphFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_graph, container, false);
 
         TextView history =  (TextView) root.findViewById(R.id.Intake);
-        log.readData(history);
+        log.readData(history, getActivity());
 
 
         return root;

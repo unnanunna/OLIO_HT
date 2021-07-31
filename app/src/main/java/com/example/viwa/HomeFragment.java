@@ -14,7 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class HomeFragment extends Fragment {
@@ -30,7 +32,7 @@ public class HomeFragment extends Fragment {
 
     WaterTracker waterTracker = WaterTracker.getInstance();
     VitaminRecommend vita = VitaminRecommend.getInstance();
-    checkDay checkDay = checkDay.getInstance();
+    checkDay checking = checkDay.getInstance();
     Log log = new Log();
 
     public HomeFragment() {
@@ -38,15 +40,20 @@ public class HomeFragment extends Fragment {
     }
 
     public boolean checkDay(int water, int vitamin){
-        strDay = currentDay.toString();
+        strDay = currentDay.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
-        if (checkDay.getCheck().equals("")) {
+
+        if (checking.getCheck().equals("")) {
             return true;
-        } else if (strDay.equals(checkDay.getCheck())) {
+        } else if (strDay.equals(checking.getCheck())) {
             return true;
         } else {
-            checkDay.setCheck(strDay);
-            log.saveData(currentDay, water, vitamin);
+            checking.setCheck(strDay);
+            try {
+                log.saveData(currentDay, water, vitamin, getActivity());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return false;
         }
 
@@ -65,7 +72,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         check = checkDay(waterTracker.getWater(), vita.getVitamin());
-        clicked = checkDay.getClicked();
+        clicked = checking.getClicked();
         ImageButton button = root.findViewById(R.id.vitamins);
 
         if (check && clicked) {
@@ -85,8 +92,15 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
                 vita.vitaminAdd();
-                checkDay.setClicked(true);
+                checking.setClicked(true);
                 button.setBackgroundResource(R.color.dark_turqoise);
+
+                try {
+                    log.saveData(currentDay, waterTracker.getWater(), vita.getVitamin(), getActivity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
         });
@@ -103,6 +117,12 @@ public class HomeFragment extends Fragment {
 
                 ProgressBar simpleProgressBar=(ProgressBar) root.findViewById(R.id.progress);
                 simpleProgressBar.setProgress(waterTracker.getWater());
+
+                try {
+                    log.saveData(currentDay, waterTracker.getWater(), vita.getVitamin(), getActivity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -116,6 +136,12 @@ public class HomeFragment extends Fragment {
 
                 ProgressBar simpleProgressBar=(ProgressBar) root.findViewById(R.id.progress);
                 simpleProgressBar.setProgress(waterTracker.getWater());
+
+                try {
+                    log.saveData(currentDay, waterTracker.getWater(), vita.getVitamin(), getActivity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -130,6 +156,12 @@ public class HomeFragment extends Fragment {
 
                 ProgressBar simpleProgressBar=(ProgressBar) root.findViewById(R.id.progress);
                 simpleProgressBar.setProgress(waterTracker.getWater());
+
+                try {
+                    log.saveData(currentDay, waterTracker.getWater(), vita.getVitamin(), getActivity());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });

@@ -24,7 +24,7 @@
         android:id="@+id/Intake"
         android:layout_width="300dp"
         android:layout_height="500dp"
-        android:text="Water Intake info"
+        android:text=" "
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
